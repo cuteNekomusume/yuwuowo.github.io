@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extra版使用指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6e6;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(30, 30, 46, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4cc9f0;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #4cc9f0;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: #f72585;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #4361ee;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            color: #4361ee;
+            margin: 20px 0 10px;
+        }
+        
+        .section {
+            background-color: rgba(38, 38, 58, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            background-color: rgba(38, 38, 58, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            color: #f72585;
+            font-weight: bold;
+        }
+        
+        .note {
+            background-color: rgba(247, 37, 133, 0.2);
+            border-left: 4px solid #f72585;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(76, 201, 240, 0.3);
+            border: 2px solid #4cc9f0;
+            position: relative;
+        }
+        
+        .modal h2 {
+            color: #f72585;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #e6e6e6;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #f72585;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
+        }
+        
+        .tree-structure {
+            background-color: rgba(26, 26, 46, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .tab-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .tab {
+            background-color: #4361ee;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #3a0ca3;
+        }
+        
+        .tab.active {
+            background-color: #f72585;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #4361ee;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .tree-structure {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 注意事项弹窗 -->
+    <div id="noticeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>注意事项</h2>
+            <div class="note">
+                <ul>
+                    <li>此网站由AI生成</li>
+                    <li>修改某些设置后可能需要重启游戏才能生效</li>
+                    <li>测试版专属功能在正式版中会自动禁用</li>
+                    <li>建议定期备份自定义配置</li>
+                    <li>如遇问题，可使用重置功能恢复默认设置</li>
+                </ul>
+            </div>
+            <button class="btn" id="confirmBtn">我已阅读并理解</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Extra版使用指南</h1>
+            <p>功能丰富的ADOFAI模组 - 完整功能结构图</p>
+        </header>
+
+        <div class="section">
+            <h2>核心功能</h2>
+            <p><span class="highlight">F5快捷键</span> → 显示/隐藏 UnifiedSettingsGUI 主界面</p>
+            
+            <h3>主界面功能区</h3>
+            <div class="tree-structure">
+主界面功能区
+    ├── 窗口控制区
+    │   ├── 缩放滑块 (0.5x-2.0x)
+    │   ├── 字体选择下拉菜单
+    │   ├── 全屏切换按钮
+    │   ├── 重置窗口按钮
+    │   └── 关闭按钮 (×)
+    │
+    ├── 窗口大小调整
+    │   ├── 宽度滑块 (100-2000)
+    │   └── 高度滑块 (100-1500)
+    │
+    └── 标签页导航系统
+        ├── 第一行标签页
+        │   ├── General (通用设置)
+        │   ├── Info Color (信息颜色) *测试版
+        │   ├── Text Display (文本显示)
+        │   ├── Planet (星球设置)
+        │   ├── KeyColor (按键颜色)
+        │   └── AutoRating (自动评级)
+        │
+        ├── 第二行标签页
+        │   ├── Creplay (回放功能)
+        │   ├── JudgeText (判定文本美化)
+        │   ├── ErrorMeter (错误计量表)
+        │   ├── TalopTweaker (调整器)
+        │   ├── OttoKV (Otto按键显示)
+        │   └── KeyViewer (按键查看器)
+        │
+        └── 第三行标签页
+            ├── Yoon (Yoon按键显示)
+            ├── JipperKV (Jipper按键显示)
+            ├── HitErrorMeter (命中错误计量)
+            ├── ComboAnimation (连击动画)
+            ├── Log (日志设置) *测试版
+            └── Delebi (Delebi按键显示)
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>标签页详细功能</h2>
+            
+            <div class="tab-container">
+                <div class="tab active" data-tab="general">General (通用设置)</div>
+                <div class="tab" data-tab="info-color">Info Color (信息颜色)</div>
+                <div class="tab" data-tab="text-display">Text Display (文本显示)</div>
+                <div class="tab" data-tab="planet">Planet (星球设置)</div>
+                <div class="tab" data-tab="keycolor">KeyColor (按键颜色)</div>
+                <div class="tab" data-tab="autorating">AutoRating (自动评级)</div>
+            </div>
+            
+            <div id="general" class="tab-content active">
+                <h3>General (通用设置)</h3>
+                <ul>
+                    <li><span class="highlight">字体设置</span>
+                        <ul>
+                            <li>字体类型选择 (Default/Jipper/Other/旧版)</li>
+                            <li>字体预览区域</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">功能开关</span>
+                        <ul>
+                            <li>音频输入 (Audio Buffer)</li>
+                            <li>文本显示 (Info Display)</li>
+                            <li>进度条 (Progress Bar)</li>
+                            <li>旧版自动 (Old Auto)</li>
+                            <li>星球环 (Planet Rings)</li>
+                            <li>完美文本 (Perfect Text)</li>
+                            <li>移动端判定 (Mobile Hit Margin)</li>
+                            <li>按键显示 (Key Viewer)</li>
+                            <li>按键限制 (Key Limit)</li>
+                            <li>重置按键数 (Reset Key Count)</li>
+                            <li>彩虹UI (Rainbow UI)</li>
+                            <li>失败消息文本输入</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">高级选项 (需重启)</span>
+                        <ul>
+                            <li>IL2CPP工具 (Android)</li>
+                            <li>自定义拍打音</li>
+                            <li>地板上显示速度文本
+                                <ul>
+                                    <li>轨道BPM文本</li>
+                                    <li>实际BPM文本</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="info-color" class="tab-content">
+                <h3>Info Color (信息颜色) *测试版专属</h3>
+                <ul>
+                    <li>BPM文本渐变色 (起始色/结束色)</li>
+                    <li>Combo文本渐变色 (起始色/结束色)</li>
+                    <li>进度文本渐变色 (起始色/结束色)</li>
+                    <li>音乐文本渐变色 (起始色/结束色)</li>
+                    <li>地板文本渐变色 (起始色/结束色)</li>
+                    <li>进度条颜色设置
+                        <ul>
+                            <li>线条起始色</li>
+                            <li>线条结束色</li>
+                            <li>背景色</li>
+                            <li>边框色</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="text-display" class="tab-content">
+                <h3>Text Display (文本显示)</h3>
+                <ul>
+                    <li><span class="highlight">主控制</span>
+                        <ul>
+                            <li>启用信息显示 (总开关)</li>
+                            <li>精简模式开关</li>
+                            <li>完美文本输入框</li>
+                            <li>描边模式开关</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">文本大小设置</span>
+                        <ul>
+                            <li>使用统一文本大小开关</li>
+                            <li>统一大小滑块 (10-100)</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">文本元素控制</span>
+                        <ul>
+                            <li>BPM显示信息 (开关/位置/大小)</li>
+                            <li>左上角内容 (开关/位置/大小)</li>
+                            <li>分数文本 (开关/位置/大小)</li>
+                            <li>命中偏移文本 (开关/位置/大小)</li>
+                            <li>连击文本总开关
+                                <ul>
+                                    <li>完美数位置调整</li>
+                                    <li>完美文本位置调整</li>
+                                    <li>自动方块文本位置调整</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">快速操作</span>
+                        <ul>
+                            <li>显示全部按钮</li>
+                            <li>隐藏全部按钮</li>
+                            <li>重置位置按钮</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="planet" class="tab-content">
+                <h3>Planet (星球设置)</h3>
+                <ul>
+                    <li><span class="highlight">Opacity (不透明度) 子标签</span>
+                        <ul>
+                            <li>红色星球 (星球1)
+                                <ul>
+                                    <li>星球中心不透明度</li>
+                                    <li>星球尾焰不透明度</li>
+                                    <li>星球环不透明度</li>
+                                </ul>
+                            </li>
+                            <li>蓝色星球 (星球2)
+                                <ul>
+                                    <li>星球中心不透明度</li>
+                                    <li>星球尾焰不透明度</li>
+                                    <li>星球环不透明度</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">Colors (颜色) 子标签</span>
+                        <ul>
+                            <li>颜色编辑目标选择
+                                <ul>
+                                    <li>红色星球</li>
+                                    <li>蓝色星球</li>
+                                    <li>红色尾焰</li>
+                                    <li>蓝色尾焰</li>
+                                </ul>
+                            </li>
+                            <li>颜色预览显示</li>
+                            <li>RGBA滑块调整 (红/绿/蓝/透明度)</li>
+                            <li>启用开关
+                                <ul>
+                                    <li>红色星球启用</li>
+                                    <li>蓝色星球启用</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="keycolor" class="tab-content">
+                <h3>KeyColor (按键颜色)</h3>
+                <ul>
+                    <li><span class="highlight">颜色编辑目标选择</span>
+                        <ul>
+                            <li>非活动文本颜色</li>
+                            <li>活动文本颜色</li>
+                            <li>活动线条颜色</li>
+                            <li>非活动线条颜色</li>
+                            <li>Rain Key颜色</li>
+                        </ul>
+                    </li>
+                    <li>颜色预览显示</li>
+                    <li>RGBA滑块调整</li>
+                    <li><span class="highlight">操作按钮</span>
+                        <ul>
+                            <li>应用并保存按钮</li>
+                            <li>重置默认值按钮</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="autorating" class="tab-content">
+                <h3>AutoRating (自动评级)</h3>
+                <ul>
+                    <li><span class="highlight">位置调整</span>
+                        <ul>
+                            <li>X坐标滑块 (0.0-1.0)</li>
+                            <li>Y坐标滑块 (0.0-1.0)</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">字体设置</span>
+                        <ul>
+                            <li>字体大小滑块 (10-50)</li>
+                            <li>行间距滑块 (0.01-0.2)</li>
+                        </ul>
+                    </li>
+                    <li><span class="highlight">显示选项</span>
+                        <ul>
+                            <li>显示转换评级开关</li>
+                            <li>使用粗体字体开关</li>
+                            <li>仅在游戏中显示开关</li>
+                        </ul>
+                    </li>
+                    <li>保存设置按钮</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>使用流程说明</h2>
+            <ul>
+                <li><span class="highlight">基本操作流程</span>
+                    <ul>
+                        <li>启动游戏 → F5打开设置 → 选择标签页 → 调整设置 → 保存应用</li>
+                    </ul>
+                </li>
+                <li><span class="highlight">文本编辑流程</span>
+                    <ul>
+                        <li>Text Display标签页 → 开启编辑模式 → 选择文本元素 → 调整位置/大小 → 保存</li>
+                    </ul>
+                </li>
+                <li><span class="highlight">颜色设置流程</span>
+                    <ul>
+                        <li>选择颜色标签页 → 选择编辑目标 → 调整RGBA → 预览效果 → 应用保存</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>版本限制说明</h2>
+            <ul>
+                <li><span class="highlight">测试版专属功能</span>
+                    <ul>
+                        <li>Info Color 颜色设置</li>
+                        <li>Auto Perfect Combo</li>
+                        <li>Log 日志设置</li>
+                    </ul>
+                </li>
+                <li><span class="highlight">开发者模式功能</span>
+                    <ul>
+                        <li>启用专业事件</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>重要提示</h2>
+            <ul>
+                <li><span class="highlight">保存机制</span>: 每个标签页独立保存，需手动点击保存按钮</li>
+                <li><span class="highlight">重启要求</span>: 高级选项修改后需要重启游戏生效</li>
+                <li><span class="highlight">重置功能</span>: 支持窗口重置、位置重置、颜色重置、设置重置</li>
+                <li><span class="highlight">配置持久化</span>: 所有设置自动保存，重启后保留</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>Extra版使用指南 &copy; 2025 - 完整功能结构图</p>
+        </footer>
+    </div>
+
+    <script>
+        // 显示注意事项弹窗
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('noticeModal');
+            modal.style.display = 'flex';
+            
+            // 关闭弹窗
+            document.getElementById('closeModal').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            document.getElementById('confirmBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // 点击弹窗外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // 标签页切换功能
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签的active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 显示对应内容
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
